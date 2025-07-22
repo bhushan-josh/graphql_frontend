@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 interface RestDemoProps {
   userId: string;
 }
 
 function RestDemo({ userId }: RestDemoProps) {
+  const REST_API_URL = import.meta.env.VITE_REST_API_URL;
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState<number | null>(null);
@@ -19,21 +20,21 @@ function RestDemo({ userId }: RestDemoProps) {
     const start = performance.now();
     let totalBytes = 0;
     try {
-      const userRes = await fetch(`http://localhost:3000/users/${userId}`);
+      const userRes = await fetch(`${REST_API_URL}/users/${userId}`);
       const userResClone = userRes.clone();
       const userBlob = await userResClone.blob();
       totalBytes += userBlob.size;
       if (!userRes.ok) throw new Error('User not found');
       const user = await userRes.json();
 
-      const postsRes = await fetch(`http://localhost:3000/users/${userId}/posts`);
+      const postsRes = await fetch(`${REST_API_URL}/users/${userId}/posts`);
       const postsResClone = postsRes.clone();
       const postsBlob = await postsResClone.blob();
       totalBytes += postsBlob.size;
       const posts = await postsRes.json();
 
       const postsWithComments = await Promise.all(posts.map(async (post: any) => {
-        const commentsRes = await fetch(`http://localhost:3000/posts/${post.id}/comments`);
+        const commentsRes = await fetch(`${REST_API_URL}/posts/${post.id}/comments`);
         const commentsResClone = commentsRes.clone();
         const commentsBlob = await commentsResClone.blob();
         totalBytes += commentsBlob.size;

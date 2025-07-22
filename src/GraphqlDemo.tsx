@@ -4,14 +4,14 @@ interface GraphqlDemoProps {
   userId: string;
 }
 
-const GRAPHQL_ENDPOINT = 'http://localhost:3000/graphql'; // Adjust if your backend runs elsewhere
-
 const GraphqlDemo: React.FC<GraphqlDemoProps> = ({ userId }) => {
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
   const [time, setTime] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [dataSize, setDataSize] = useState<number | null>(null);
+
+  const GRAPHQL_ENDPOINT = import.meta.env.VITE_GRAPHQL_API_URL;
 
   const fetchData = async () => {
     setLoading(true);
