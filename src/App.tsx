@@ -7,7 +7,7 @@ import RestDemo from './RestDemo';
 import GraphqlDemo from './GraphqlDemo';
 
 function App() {
-  const [userId, setUserId] = useState('1');
+  const [userId, setUserId] = useState('10');
   return (
     <Router>
       <div style={{ textAlign: 'center', marginTop: '2rem' }}>

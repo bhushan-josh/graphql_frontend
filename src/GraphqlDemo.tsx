@@ -64,10 +64,10 @@ const GraphqlDemo: React.FC<GraphqlDemoProps> = ({ userId }) => {
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {data && !error && (
         <div style={{ textAlign: 'left', margin: '2rem auto', maxWidth: 600 }}>
-          <h3>User: {data.name}</h3>
+          <h3 style={{ color: '#1976d2' }}>User: {data.name}</h3>
           {data.posts.map((post: any) => (
             <div key={post.id} style={{ marginLeft: 20, marginBottom: 10 }}>
-              <strong>Post: {post.title}</strong>
+              <strong style={{ color: '#388e3c' }}>Post: {post.title}</strong>
               <ul>
                 {post.comments.map((comment: any) => (
                   <li key={comment.id}>{comment.body}</li>
