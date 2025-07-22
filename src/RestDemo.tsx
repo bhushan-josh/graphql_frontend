@@ -1,22 +1,20 @@
 import { useState } from 'react';
+import { useApiDemo } from './ApiDemoContext';
 
 interface RestDemoProps {
   userId: string;
 }
 
 function RestDemo({ userId }: RestDemoProps) {
-  const REST_API_URL = import.meta.env.VITE_REST_API_URL;
-  const [data, setData] = useState<any | null>(null);
+  const { rest, setRest } = useApiDemo();
   const [loading, setLoading] = useState(false);
-  const [time, setTime] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [dataSize, setDataSize] = useState<number | null>(null);
+  const REST_API_URL = import.meta.env.VITE_REST_API_URL;
 
   const fetchData = async () => {
     setLoading(true);
     setError(null);
-    setTime(null);
-    setDataSize(null);
+    setRest({ data: null, time: null, dataSize: null });
     const start = performance.now();
     let totalBytes = 0;
     try {
@@ -41,9 +39,7 @@ function RestDemo({ userId }: RestDemoProps) {
         const comments = await commentsRes.json();
         return { ...post, comments };
       }));
-      setData({ ...user, posts: postsWithComments });
-      setTime(performance.now() - start);
-      setDataSize(totalBytes);
+      setRest({ data: { ...user, posts: postsWithComments }, time: performance.now() - start, dataSize: totalBytes });
     } catch (err: any) {
       setError(err.message || 'Error fetching data');
     }
@@ -53,16 +49,16 @@ function RestDemo({ userId }: RestDemoProps) {
   return (
     <div>
       <h2>REST API Demo</h2>
-      <button onClick={fetchData} disabled={loading}>
-        {loading ? 'Loading...' : 'Fetch Data'}
+      <button onClick={fetchData} disabled={loading} style={{ marginBottom: '1rem' }}>
+        {loading ? 'Loading...' : 'Load Data'}
       </button>
-      {time !== null && <p>Time taken: {time.toFixed(2)} ms</p>}
-      {dataSize !== null && <p>Data size: {dataSize} bytes ({(dataSize/1024).toFixed(2)} KB)</p>}
+      {rest.time !== null && <p>Time taken: {rest.time.toFixed(2)} ms</p>}
+      {rest.dataSize !== null && <p>Data size: {rest.dataSize} bytes ({(rest.dataSize/1024).toFixed(2)} KB)</p>}
       {error && <p style={{ color: 'red' }}>{error}</p>}
-      {data && !error && (
+      {rest.data && !error && (
         <div style={{ textAlign: 'left', margin: '2rem auto', maxWidth: 600 }}>
-          <h3 style={{ color: '#1976d2' }}>User: {data.name}</h3>
-          {data.posts.map((post: any) => (
+          <h3 style={{ color: '#1976d2' }}>User: {rest.data.name}</h3>
+          {rest.data.posts.map((post: any) => (
             <div key={post.id} style={{ marginLeft: 20, marginBottom: 10 }}>
               <strong style={{ color: '#388e3c' }}>Post: {post.title}</strong>
               <ul>

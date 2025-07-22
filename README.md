@@ -1,6 +1,11 @@
-run
+RUN
+
 nvm use 
 nvm install
+nvm use
+rm -rf node_modules package-lock.json && npm install
+<!-- optional -> rm -rf node_modules .vite package-lock.json && npm install -->
+npm run dev
 
 
 
